@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <FrameLayout
+        android:id="@+id/cameralayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        tools:context="com.goertek.ground.player.FragmentCamera">
+
+        <!--<com.goertek.ground.player.CameraLiveView-->
+            <!--android:id="@+id/surfaceview"-->
+            <!--android:visibility="visible"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:clickable="true"-->
+            <!--android:layout_centerInParent="true" />-->
+
+
+        <com.goertek.ground.player.CameraLiveView
+            android:id="@+id/surfaceview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal|top"
+            android:visibility="invisible"/>
+
+        <ImageButton
+            android:id="@+id/btn_fullscreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:background="@null"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:src="@drawable/btn_fullscreen" />
+
+        <RelativeLayout
+            android:id="@+id/layout_landscape"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/btnBack_landscape"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_back_camera" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="103dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="#cc000000"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingBottom="42dp"
+                android:paddingTop="42dp">
+
+                <LinearLayout
+                    android:id="@+id/btn_rec_video_landscape"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:drawablePadding="4dp"
+                        android:drawableTop="@drawable/btn_rec_video_landscape"
+                        android:enabled="false"
+                        android:gravity="center"
+                        android:text="@string/fragment_camera_action_video"
+                        android:textColor="#f5f5f5"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btn_take_share_landscape"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:drawablePadding="4dp"
+                        android:drawableTop="@drawable/btn_traffic_landscape"
+                        android:enabled="false"
+                        android:gravity="center"
+                        android:text="@string/fragment_camera_action_share"
+                        android:textColor="#f5f5f5"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btn_take_photo_landscape"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:drawablePadding="4dp"
+                        android:drawableTop="@drawable/btn_camera_landscape"
+                        android:enabled="false"
+                        android:gravity="center"
+                        android:text="@string/fragment_camera_action_photo"
+                        android:textColor="#f5f5f5"
+                        android:textSize="15dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+    <LinearLayout
+        android:id="@+id/layout_url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cameralayout"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="6dp"
+            android:text="@string/url"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/rtspurl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="@string/rtsp"
+            android:hint="@string/rtsp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/id_tab_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/layout_url">
+
+        <Button
+            android:id="@+id/btn_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:text="@string/play" />
+
+        <Button
+            android:id="@+id/btn_cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:text="@string/cancle" />
+    </LinearLayout>
+
+</RelativeLayout>

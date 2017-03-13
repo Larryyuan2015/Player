@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.goertek.ground.player.FragmentMain">
+
+    <fragment
+        android:id="@+id/id_fragment_camera"
+        class="com.goertek.ground.player.FragmentCamera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+<!--
+        tools:layout="@layout/fragment_camera"
+    <fragment
+        android:id="@+id/id_fragment_equipment"
+        class="com.goertek.ground.player.FragmentMAP"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/id_status_top"/>
+
+    <fragment
+        android:id="@+id/id_fragment_gallery"
+        class="com.goertek.ground.player.FragmentGallery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/id_status_top"/>
+
+    <fragment
+        android:id="@+id/id_fragment_setting"
+        class="com.goertek.ground.player.FragmentSetting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/id_status_top"/>-->
+
+<!--//这里放状态栏？固定图标等-->
+
+</RelativeLayout>
