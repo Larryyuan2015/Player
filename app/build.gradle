@@ -1,28 +1,41 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.goertek.ground.player"
         minSdkVersion 19
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
-//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
 
-    sourceSets {
-        //noinspection GroovyAssignabilityCheck
-        main {
-            jniLibs.srcDirs = ['libs']
+        externalNativeBuild {
+            ndkBuild {
+                arguments "NDK_APPLICATION_MK=src/main/cpp/Application.mk"
+                cppFlags "-frtti", "-fexceptions"
+                abiFilters "armeabi-v7a"
+            }
         }
     }
+
+//    sourceSets {
+//        //noinspection GroovyAssignabilityCheck
+//        main {
+//            jniLibs.srcDirs = ['libs']
+//        }
+//    }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    externalNativeBuild {
+        ndkBuild {
+            path 'src/main/cpp/Android.mk'
         }
     }
 }
@@ -31,7 +44,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //MP4 generation library
     compile 'com.googlecode.mp4parser:isoparser:1.1.7'
-    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.jakewharton.timber:timber:2.7.1'
 //    compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.trello:rxlifecycle:0.6.1'
