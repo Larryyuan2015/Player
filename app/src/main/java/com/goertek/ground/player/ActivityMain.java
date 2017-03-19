@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -22,7 +21,7 @@ import com.goertek.ground.utils.ui.LocalBroadcastHelper;
 import com.goertek.ground.utils.ui.StatusBarCompat;
 import com.trello.rxlifecycle.components.support.RxFragmentActivity;
 
-//RxFragmentActivity
+
 public class ActivityMain extends RxFragmentActivity {
     private final static String TAG = "ActivityMain";
     public static String RTSPURL="";
@@ -39,9 +38,14 @@ public class ActivityMain extends RxFragmentActivity {
         // 去除title
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);test
         setContentView(R.layout.activity_main);
         text_rtsp=(EditText)findViewById(R.id.rtspurl);
+//        text_rtsp.setText("file:///storage/emulated/0/test.mp4");
+//        rtsp://192.168.42.1:554/live
+        text_rtsp.setText(R.string.rtsp);
+//        udp://@:1234
+//        text_rtsp.setText(R.string.udp);//zhengtu udp use single connect,for avformat_open_input error
         RTSPURL=text_rtsp.getText().toString();
         registerShowCameraBroadcast();
         StatusBarCompat.showStatusBar(this, false);

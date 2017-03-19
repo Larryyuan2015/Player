@@ -15,6 +15,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -42,10 +43,20 @@ public class CameraLiveView extends SurfaceView implements SurfaceHolder.Callbac
 	private Thread mThreadDecode = null;
 	private Thread mThreadDraw = null;
 	private Surface surface = null;
+	private boolean isRecording = false;
+	private boolean isSharing = false;
+	private boolean isPlaying = false;
 
 	public native void initialWithUrl(String url);
 	public native void play( Bitmap bitmap);
-	
+	public native void stop();
+	public native int startRecVideo(String outputpath);
+	public native int stopRecVideo();
+
+	public native int nstartShareVideo(String outputurl);
+	public native int nstopShareVideo();
+
+
 	public CameraLiveView(Context context) {
 		super(context);
 		init(context);
@@ -95,10 +106,18 @@ public class CameraLiveView extends SurfaceView implements SurfaceHolder.Callbac
 
 	public void startPlay(String url) {
 //		mFullScreen = true;
+		isPlaying = true;
 		setVisibility(View.VISIBLE);
 		Log.i(TAG, "init startPlay");
 //		surfaceCreated(m_softHolder);
 //        m_ui_ctrl.start();
+	}
+
+	public void stopPlay() {
+		isPlaying = false;
+//		setVisibility(View.INVISIBLE);
+		Log.i(TAG, "stopPlay");
+		stop();
 	}
 
 	public void restartPlay() {
@@ -155,10 +174,7 @@ public class CameraLiveView extends SurfaceView implements SurfaceHolder.Callbac
 		@Override
 		public void run() {
 			Log.i(TAG, "play initialWithUrl");
-//				initialWithUrl(ActivityMain.RTSPURL);
-//			initialWithUrl(ActivityMain.UDPURL);
-				initialWithUrl("file:///storage/emulated/0/test.mp4");
-//			initialWithUrl("rtmp://192.168.253.1/oflaDemo");
+			initialWithUrl(ActivityMain.RTSPURL);
 			play(bitmap);
 			Log.i(TAG, "playing");
 		}
@@ -217,6 +233,12 @@ public class CameraLiveView extends SurfaceView implements SurfaceHolder.Callbac
 
 	public void stopDrawThread()
 	{
+
+		if(mThreadDecode !=null){
+//			mThreadDecode.stop();
+			mThreadDecode =null;
+		}
+
 		if(mThreadDraw !=null){
 //			mThreadDraw.stop();
 			mThreadDraw =null;
@@ -225,11 +247,31 @@ public class CameraLiveView extends SurfaceView implements SurfaceHolder.Callbac
 	}
 
 
+	public boolean isRecording(){
+		if (isRecording)
+			return true;
+		return false;
+	}
+
+	public boolean isSharing(){
+		if (isSharing)
+			return true;
+		return false;
+	}
+
+	public boolean isPlaying(){
+		if (isPlaying)
+			return true;
+		return false;
+	}
+
 	//开始录制视频
-	public void startRecVideo(String outputPath){
+	public void startRecordVideo(String outputPath){
 		if (TextUtils.isEmpty(outputPath))
 			return;
 
+		isRecording = true;
+		startRecVideo(outputPath);
 //		if (null != m_ui_ctrl){
 //			mRecVideoOutputPath = outputPath;
 //			//outputPath += ".tmp";
@@ -238,7 +280,27 @@ public class CameraLiveView extends SurfaceView implements SurfaceHolder.Callbac
 //		}
 	}
 
+	public void stopRecordVideo(){
+		if(isRecording)
+			stopRecVideo();
+		isRecording=false;
+		//异步返回时，mRecVideoState = RECORD_STATE.FINISH；
+	}
 
+	//开始分享视频
+	public void startShareVideo(String outputPath){
+//		if (TextUtils.isEmpty(outputPath))
+//			return;
+		isSharing = true;
+		nstartShareVideo(outputPath);
+	}
+
+	public void stopShareVideo(){
+		if(isSharing)
+			nstopShareVideo();
+		isSharing=false;
+		//异步返回时，mRecVideoState = RECORD_STATE.FINISH；
+	}
 
 	//callback by native
 	public void setBitmapSize(int width, int height) {

@@ -4,15 +4,19 @@ package com.goertek.ground.player;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goertek.ground.utils.ui.FullScreenHelper;
 import com.goertek.ground.utils.ui.StatusBarCompat;
@@ -30,6 +34,8 @@ public class FragmentCamera extends TabFragment implements View.OnClickListener 
 	private View mRootView;
 	private boolean mFullScreen = false;
 	private FullScreenHelper mFullScreenHelper;
+	private String mOutputPath;
+	private Button btn_play;
 
 	@Override
 	public void onAttach(Context context) {
@@ -115,7 +121,8 @@ public class FragmentCamera extends TabFragment implements View.OnClickListener 
 
 		mLayoutLandscape = mRootView.findViewById(R.id.layout_landscape);
 
-
+		mOutputPath =(new StringBuilder(String.valueOf(Environment.getExternalStorageDirectory().getPath(
+		)))).append("/").toString();
 		return mRootView;
 	}
 
@@ -145,7 +152,7 @@ public class FragmentCamera extends TabFragment implements View.OnClickListener 
 			id_tab_camera.setOnClickListener(this);
 		}
 
-		View btn_play = mRootView.findViewById(R.id.btn_play);
+		btn_play = (Button)mRootView.findViewById(R.id.btn_play);
 		if (btn_play != null) {
 			btn_play.setVisibility(View.VISIBLE);
 			btn_play.setOnClickListener(this);
@@ -262,24 +269,49 @@ public class FragmentCamera extends TabFragment implements View.OnClickListener 
 	public void onClick(View v){
 		switch (v.getId()){
 			case R.id.btn_rec_video_landscape:
-//				doRecVideo();
+				if(!mCameraLiveView.isRecording()) {
+					doRecVideo();
+					//显示录像时间
+					Toast.makeText(getActivity(), "record started", Toast.LENGTH_SHORT).show();
+				}
+				else {
+					mCameraLiveView.stopRecordVideo();
+					//结束录像提示
+					Toast.makeText(getActivity(), "record finished", Toast.LENGTH_SHORT).show();
+				}
+				break;
 			case R.id.btn_take_share_landscape:
-//				showCameraListDialog();
+				if(!mCameraLiveView.isSharing()) {
+					doShareVideo();
+					//显示录像时间
+					Toast.makeText(getActivity(), "share started", Toast.LENGTH_SHORT).show();
+				}
+				else {
+					mCameraLiveView.stopShareVideo();
+					//结束录像提示
+					Toast.makeText(getActivity(), "share finished", Toast.LENGTH_SHORT).show();
+				}
 				break;
 			case R.id.btn_take_photo_landscape:
 				//doScreenShot();
 				break;
 			case R.id.btn_play:
 			case R.id.id_tab_camera:
-//				if (null != getActivity()){
-////								autoRestoreSystemOritentationSensor(true);
-//					getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//				if(!mCameraLiveView.isPlaying()) {
+					startPlay();
+//					btn_play.setText(R.string.cancle);
 //				}
-				startPlay();
+//				else {
+//					mCameraLiveView.stopPlay();
+//					btn_play.setText(R.string.play);
+//				}
+
 				break;
 			case R.id.btn_cancle:
+				mCameraLiveView.stopPlay();
 				mCameraLiveView.stopDrawThread();
-				mCameraLiveView.setVisibility(View.INVISIBLE);
+
+
 			default:
 				break;
 		}
@@ -306,5 +338,95 @@ public class FragmentCamera extends TabFragment implements View.OnClickListener 
 		if (null == btnRecVideoLandscape) return false;
 		btnRecVideoLandscape.setEnabled(bEnable);
 		return true;
+	}
+
+	private VideoRecorderTask mVideoRecorderTask;
+
+	private void doRecVideo() {
+
+//		mVideoRecorderView.setEnabled(false);
+//		cancelVideoRecorderTask();
+
+		mVideoRecorderTask = new VideoRecorderTask();
+		mVideoRecorderTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//		mVideoRecorderView = null;
+	}
+
+
+	class VideoRecorderTask extends AsyncTask<Void, Void, String> {
+		private View mView;
+
+		public VideoRecorderTask() {
+//			mView = v;
+		}
+
+		@Override
+		protected String doInBackground(Void... params) {
+			return doRecordVideo();
+		}
+
+		@Override
+		protected void onPostExecute(String filepath) {
+			super.onPostExecute(filepath);
+			Log.i(TAG, "onPostExecute start");
+//			if (filepath != null) {
+//				updateGallery(filepath);
+//				DrApplication.showToast("本地录像完成");
+//			} else {
+//				DrApplication.showToast("本地录像失败");
+//			}
+//			mView.setEnabled(true);
+
+			Log.i(TAG, "onPostExecute end");
+		}
+	}
+	public String doRecordVideo() {
+		Log.i(TAG, "doVideoRecorder start");
+		String outfilename = mOutputPath+ System.currentTimeMillis() + ".mp4";
+		mCameraLiveView.startRecordVideo(outfilename);
+
+		return outfilename;
+	}
+
+	///////////////////////分享视频
+
+	private VideoShareTask mVideoShareTask;
+
+	private void doShareVideo() {
+
+//		mVideoRecorderView.setEnabled(false);
+//		cancelVideoRecorderTask();
+
+		mVideoShareTask = new VideoShareTask();
+		mVideoShareTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	}
+
+
+	class VideoShareTask extends AsyncTask<Void, Void, String> {
+		private View mView;
+
+		public VideoShareTask() {
+//			mView = v;
+		}
+
+		@Override
+		protected String doInBackground(Void... params) {
+			return doShareVideo2();
+		}
+
+		@Override
+		protected void onPostExecute(String filepath) {
+			super.onPostExecute(filepath);
+			Log.i(TAG, "onPostExecute start");
+
+			Log.i(TAG, "onPostExecute end");
+		}
+	}
+	public String doShareVideo2() {
+		Log.i(TAG, "doVideoRecorder start");
+		String outfileurl = "rtmp://192.168.253.1/oflaDemo/test";
+		mCameraLiveView.startShareVideo(outfileurl);
+
+		return outfileurl;
 	}
 }
